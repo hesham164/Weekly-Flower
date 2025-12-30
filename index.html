@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Valentine’s Bouquet Showcase</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Playfair Display', serif;
+      background: linear-gradient(135deg, #fff0f5, #ffe4e1);
+      color: #4b2c2c;
+      text-align: center;
+    }
+    header {
+      padding: 50px;
+      font-family: 'Great Vibes', cursive;
+      font-size: 3.5em;
+      color: #c2185b;
+      text-shadow: 0 0 12px #ffb6c1;
+    }
+    .bouquet img {
+      max-width: 70%;
+      border: 10px solid #c2185b;
+      border-radius: 30px;
+      box-shadow: 0 0 30px rgba(194,24,91,0.6);
+      animation: fadeIn 3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .love-quote {
+      margin-top: 20px;
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.8em;
+      color: #c2185b;
+    }
+    .countdown {
+      margin-top: 30px;
+      font-size: 1.1em;
+      color: #6d4c41;
+    }
+    footer {
+      margin-top: 50px;
+      padding: 20px;
+      font-size: 1em;
+      color: #8d6e63;
+      border-top: 1px solid #d7ccc8;
+    }
+    .controls {
+      margin-top: 20px;
+    }
+    .controls button {
+      background: #c2185b;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'Playfair Display', serif;
+    }
+  </style>
+</head>
+<body>
+  <header>💌 Bouquet of the Week 💌</header>
+  <div class="bouquet">
+    <img id="bouquetImage" src="" alt="Weekly Bouquet">
+  </div>
+  <div class="love-quote" id="loveQuote"></div>
+  <div class="countdown" id="countdown"></div>
+  <div class="controls">
+    <button id="soundToggle">Sound: Off</button>
+  </div>
+  <footer>Made with Love 💖</footer>
+
+  <audio id="bgMusic" preload="auto" loop>
+    <source src="audio/piano.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const quotes = [
+      "If I had a flower for every time I thought of you, I could walk in my garden forever.",
+      "Love is the flower you’ve got to let grow.",
+      "Every bouquet is a poem of the heart.",
+      "True love blooms in its own perfect time.",
+      "Romance is the fragrance of flowers carried on the wings of devotion.",
+      "You are my forever Valentine.",
+      "Every flower is a whisper of love.",
+      "My heart blooms only for you.",
+      "In your smile, I see the first bloom of spring.",
+      "Love planted a rose, and the world turned sweet.",
+      "You are the sunshine that makes my soul blossom.",
+      "A single rose can be my garden… a single soul, my world.",
+      "You are the petal that completes my bloom.",
+      "Love is the seed; you are the rain that helps me grow.",
+      "With you, every season is spring.",
+      "Your love is the bouquet I never want to put down.",
+      "Like roses in the rain, we bloom through every storm.",
+      "You are the color in my garden of dreams.",
+      "Love grows wild and free in the heart.",
+      "Each petal tells a story of us.",
+      "You are the fragrance in my every breath.",
+      "Together, we are a garden in full bloom.",
+      "Love is a flower that never fades.",
+      "You make my heart blossom with joy.",
+      "In the garden of life, you are my favorite bloom.",
+      "Our love is rooted deep and blooming bright.",
+      "You are the wildflower I never expected to find.",
+      "Love is the bloom that never wilts.",
+      "You are the rose that colors my world.",
+      "Every day with you is a new bouquet of joy.",
+      "Your love is the soil where my soul grows.",
+      "We are two petals on the same stem.",
+      "Love is a garden where hearts grow close.",
+      "You are the bloom that brightens my darkest days.",
+      "Our love is a vine that climbs forever.",
+      "You are the blossom that completes my bouquet.",
+      "Love is the art of growing together.",
+      "Your heart is the garden I cherish most.",
+      "With you, every moment is in full bloom.",
+      "Love is a seed that blossoms with care.",
+      "You are the flower that never fades from my heart.",
+      "Together, we are a bouquet of dreams.",
+      "Love is the bloom that colors the soul.",
+      "You are the petal that softens my world.",
+      "Our love is a garden that never stops growing.",
+      "You are the fragrance that lingers in my heart.",
+      "Love is the sunlight that makes everything bloom.",
+      "You are the rose that never wilts in my heart.",
+      "Together, we bloom brighter than ever.",
+      "Love is the bouquet that never fades.",
+      "You are the blossom I waited a lifetime to find.",
+      "In your arms, I’ve found my forever garden."
+    ];
+
+    const bouquets = Array.from({ length: 26 }, (_, i) => ({
+      img: `images/bouquet${i + 1}.png`
+    }));
+
+    const weekNumber = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 7));
+    const seed = weekNumber + 2025;
+    function seededRandom(seed) {
+      const x = Math.sin(seed) * 10000;
+      return x - Math.floor(x);
+    }
+    const index = Math.floor(seededRandom(seed) * bouquets.length);
+    const quoteIndex = weekNumber % quotes.length;
+
+    document.getElementById("bouquetImage").src = bouquets[index].img;
+    document.getElementById("loveQuote").textContent = quotes[quoteIndex];
+
+    function updateCountdown() {
+      const now = new Date();
+      const nextWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (7 - now.getDay()));
+      const diff = nextWeek - now;
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+      document.getElementById("countdown").textContent =
+        `Next bouquet in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    const music = document.getElementById("bgMusic");
+    const toggle = document.getElementById("soundToggle");
+    let playing = false;
+    toggle.addEventListener("click", () => {
+      if (!playing) {
+        music.play();
+        playing = true;
+        toggle.textContent = "Sound: On";
+      } else {
+        music.pause();
+        playing = false;
+        toggle.textContent = "Sound: Off";
+      }
+    });
+  </script>
+</body>
+</html>

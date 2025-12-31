@@ -145,8 +145,7 @@
       padding: 15px;
       background: rgba(255, 255, 255, 0.7);
       border-radius: 15px;
-    
-}
+    }
     .secret-hint {
       font-size: 0.9em;
       color: #c2185b;
@@ -194,22 +193,26 @@
     
     <!-- Bouquet Showcase Section -->
     <div id="bouquetShowcase" class="bouquet-section">
+
       <header>💌 Bouquet of the Week 💌</header>
+      <h1> Happy new Year</h1>
+
       <div class="bouquet">
         <img id="bouquetImage" src="" alt="Weekly Bouquet">
       </div>
       <div class="love-quote" id="loveQuote"></div>
       <div class="weekly-countdown" id="weeklyCountdown"></div>
       <div class="controls">
-        <button id="soundToggle">Sound: Off</button>
+        <button id="soundToggle">Unmute</button>
       </div>
     </div>
     
     <footer>Made with Love 💖</footer>
   </div>
 
-  <audio id="bgMusic" preload="auto" loop>
-    <source src="audio/piano.mp3" type="audio/mpeg">
+  <!-- Added muted attribute to start with muted audio -->
+  <audio id="bgMusic" preload="auto" loop muted>
+    <source src="audio/piano2.mp3" type="audio/mpeg">
   </audio>
 
   <script>
@@ -334,18 +337,33 @@
       setInterval(updateWeeklyCountdown, 1000);
       updateWeeklyCountdown();
 
+      // Sound toggle functionality
       const music = document.getElementById("bgMusic");
       const toggle = document.getElementById("soundToggle");
-      let playing = false;
+      
+      // Set initial state (muted)
+      let isMuted = true;
+      music.muted = true;
+      toggle.textContent = "Unmute";
+      
+      // Toggle button click handler
       toggle.addEventListener("click", () => {
-        if (!playing) {
-          music.play().catch(e => console.log("Audio play failed:", e));
-          playing = true;
-          toggle.textContent = "Sound: On";
+        if (isMuted) {
+          // Unmute and play
+          music.muted = false;
+          music.play().catch(e => {
+            console.log("Audio play failed:", e);
+            // If autoplay fails, show a user interaction message
+            alert("Please click the Unmute button again to start the music");
+          });
+          isMuted = false;
+          toggle.textContent = "Mute";
         } else {
+          // Mute
+          music.muted = true;
           music.pause();
-          playing = false;
-          toggle.textContent = "Sound: Off";
+          isMuted = true;
+          toggle.textContent = "Unmute";
         }
       });
     }
